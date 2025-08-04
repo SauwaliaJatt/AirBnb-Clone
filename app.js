@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const Listing = require("./models/listing.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/CourseMajorDB";
 
-main ()
-    .then (() => {
+main()
+    .then(() => {
         console. log ("connected to DB");
     })
     .catch((err) => {
@@ -13,11 +14,16 @@ main ()
     });
         
 async function main() {
-    await mongoose. connect (MONGO_URL);
+    await mongoose.connect(MONGO_URL);
 }
 
-app.get("/", (req, res) => {
-    res.send("I am root");
+app.get("/", async (req, res) => {
+    try {
+        const listings = await Listing.find({});
+        res.json(listings);
+    } catch (err) {
+        res.status(500).send("Error fetching listings");
+    }
 });
 
 app.listen(8080, () => {
