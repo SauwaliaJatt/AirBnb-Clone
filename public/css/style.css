@@ -3,11 +3,42 @@
     background-color: white;
 }
 
-.compass{
+.fa-solid{
     color: #fe424d;
     font-size: 2rem;
 }
 
 .nav-link{
     color: #222222 !important;
+}
+
+
+/* footer */
+.footer-info{
+    display: flex;
+    background-color: #ebebeb;
+    height: 8rem;
+    flex-wrap: wrap;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+}
+
+.footer-info-company, .footer-info-socials, .footer-info-links{
+    width: 100%;
+}
+
+
+.footer-info-socials i{
+    margin-right: 1rem;
+    font-size: 1.3rem;
+}
+
+.footer-info-links a{
+    text-decoration: none;
+    color: #222222;
+}
+
+.footer-info-links a:hover{
+    text-decoration: underline;
 }
