@@ -1,6 +1,24 @@
+body{
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-optical-sizing: auto;
+    /* optional, works only for variable fonts */
+    font-weight: 400;
+    /* pick an actual number between 200 and 800 */
+    font-style: normal;
+
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.container{
+    flex: 1;
+}
+
 .navbar{
     height: 5rem;
     background-color: white;
+    margin-bottom: 1.5rem;
 }
 
 .fa-solid{
@@ -41,4 +59,67 @@
 
 .footer-info-links a:hover{
     text-decoration: underline;
+}
+
+
+/* cards */
+.card{
+    border: none;
+    margin-bottom: 2rem;
+}
+
+.card-img-top{
+    border-radius: 1rem;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-body{
+    padding: 0;
+
+}
+
+.card-text p{
+    font-weight: 400;
+}
+
+.listing-link{
+    text-decoration: none;
+}
+
+/* overlay effect */
+.card-img-overlay{
+    opacity: 0;
+}
+
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: white;
+}
+
+/* new,edit page */
+.add-btn{
+    background-color: #fe424d;
+    border: none;
+}
+
+.edit-btn{
+    background-color: #fe424d;
+    border: none;
+}
+
+
+/* show page */
+.show-img{
+    height: 30vh;
+}
+
+.btns{
+    display: flex;
+    margin-bottom: 2rem;
+}
+
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
 }
