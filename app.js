@@ -7,6 +7,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const { listingSchema } = require("./schema.js");
 
 
 app.set("view engine", "ejs");
@@ -32,6 +33,17 @@ async function main() {
 }
 
 
+const validateListing = (req, res, next) => {
+    let result = listingSchema.validate(req.body);
+    if(result.error){
+        let errMsg = result.error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400, result.error);
+    }else{
+        next();
+    }
+};
+
+
 //listing route
 app.get("/listings", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
@@ -44,12 +56,9 @@ app.get("/listings/new", (req, res) => {
     res.render("listings/new");
 });
 
-app.post("/listings", wrapAsync (async (req, res, next) => {
+app.post("/listings", validateListing, wrapAsync (async (req, res, next) => {
     // const {title, description, price, location, country} = req.body;
     //it get simper due to listing[title]..... in form as it directly become object like and we can directly access it without above method and easy to use
-    if(!req.body.listing){
-        throw new ExpressError(400, "Send valid data for listing");
-    }
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
@@ -63,7 +72,7 @@ app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
     res.render("listings/edit", {listing});
 }));
 
-app.put("/listings/:id", wrapAsync(async (req, res) => {
+app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
     const {id} = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing});
     res.redirect(`/listings/${id}`);
