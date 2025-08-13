@@ -5,7 +5,7 @@ const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-
+const wrapAsync = require("./utils/wrapAsync.js");
 
 
 app.set("view engine", "ejs");
@@ -43,13 +43,13 @@ app.get("/listings/new", async (req, res) => {
     res.render("listings/new");
 });
 
-app.post("/listings", async (req, res) => {
+app.post("/listings", wrapAsync (async (req, res, next) => {
     // const {title, description, price, location, country} = req.body;
     //it get simper due to listing[title]..... in form as it directly become object like and we can directly access it without above method and easy to use
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
-});
+}));
 
 
 //Edit and Update route
@@ -81,6 +81,11 @@ app.get("/listings/:id", async (req, res) => {
     res.render("listings/show", {listing});
 });
 
+
+//error - middlewares
+app.use((err, req, res, next) => {
+    res.send("Something went wrong!");
+});
 
 
 app.listen(8080, () => {
