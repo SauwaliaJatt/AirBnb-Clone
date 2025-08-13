@@ -7,10 +7,13 @@
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" name="listing[title]" class="form-control" id="title" placeholder="Add a Title" required>
+                    <div class="invalid-feedback">Please enter a title</div>
+                    <div class="valid-feedback">Title looks good</div>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea name="listing[description]" class="form-control" id="description" required></textarea>
+                    <div class="invalid-feedback">Please enter a description</div>
                 </div>
                 <div class="mb-3">
                     <label for="image" class="form-label">Image Link</label>
@@ -20,15 +23,18 @@
                     <div class="mb-3 col-md-4">
                         <label for="price" class="form-label">Price</label>
                         <input type="number" name="listing[price]" class="form-control" id="price" placeholder="1500" required>
+                        <div class="invalid-feedback">Please enter valid price</div>
                     </div>
                     <div class="mb-3 col-md-8">
                         <label for="country" class="form-label">Country</label>
                         <input type="text" name="listing[country]" class="form-control" id="country" placeholder="United States" required>
+                        <div class="invalid-feedback">Please enter valid country name</div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="location" class="form-label">Location</label>
                     <input type="text" name="listing[location]" class="form-control" id="location" placeholder="Los Angeles" required>
+                    <div class="invalid-feedback">Please enter valid location</div>
                 </div>
                 <br>
                 <button class="btn btn-dark add-btn">Add</button>
