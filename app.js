@@ -6,6 +6,7 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
+const ExpressError = require("./utils/ExpressError.js");
 
 
 app.set("view engine", "ejs");
@@ -32,20 +33,23 @@ async function main() {
 
 
 //listing route
-app.get("/listings", async (req, res) => {
+app.get("/listings", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index", {allListings});
-});
+}));
 
 
 //New and Create route
-app.get("/listings/new", async (req, res) => {
+app.get("/listings/new", (req, res) => {
     res.render("listings/new");
 });
 
 app.post("/listings", wrapAsync (async (req, res, next) => {
     // const {title, description, price, location, country} = req.body;
     //it get simper due to listing[title]..... in form as it directly become object like and we can directly access it without above method and easy to use
+    if(!req.body.listing){
+        throw new ExpressError(400, "Send valid data for listing");
+    }
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
@@ -53,38 +57,44 @@ app.post("/listings", wrapAsync (async (req, res, next) => {
 
 
 //Edit and Update route
-app.get("/listings/:id/edit", async (req, res) => {
+app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
     const {id} = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/edit", {listing});
-});
+}));
 
-app.put("/listings/:id", async (req, res) => {
+app.put("/listings/:id", wrapAsync(async (req, res) => {
     const {id} = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing});
     res.redirect(`/listings/${id}`);
-});
+}));
 
 
 //Delete route
-app.delete("/listings/:id", async (req, res) => {
+app.delete("/listings/:id", wrapAsync(async (req, res) => {
     const {id} = req.params;
     await Listing.findByIdAndDelete(id);
     res.redirect("/listings");
-});
+}));
 
 
 //show route
-app.get("/listings/:id", async (req, res) => {
+app.get("/listings/:id", wrapAsync(async (req, res) => {
     let {id} = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/show", {listing});
-});
+}));
 
 
 //error - middlewares
+//page not found
+app.use((req, res, next) => {
+    next(new ExpressError(404, "Page not Found!"));
+});
+
 app.use((err, req, res, next) => {
-    res.send("Something went wrong!");
+    let{statusCode = 500, message = "Something Went Wrong!"} = err;
+    res.status(statusCode).send(message);
 });
 
 
