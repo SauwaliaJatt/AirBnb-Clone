@@ -2,12 +2,11 @@
 <body>
     <div class="row">
         <div class="col-8 offset-3">
-            <h3>All Listings</h3>
+            <h3><%= listing.title %></h3>
         </div>
         <div class="card col-6 offset-3 show-card">
             <img src="<%= listing.image %>" class="card-img-top show-img" alt="listing_image">
             <div class="card-body">
-                <p class="card-text"><b><%= listing.title %></b></p>
                 <p class="card-text"><%= listing.description %></p>
                 <p class="card-text">&dollar; <%= listing.price.toLocaleString("en-US") %></p>
                 <p class="card-text"><%= listing.location %></p>
@@ -20,6 +19,22 @@
 
         <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
             <button class="btn btn-dark offset-5">Delete</button>
+        </form>
+    </div>
+
+    <div class="col-8 offset-3 mb-3">
+        <hr>
+        <h4>Leave a Review</h4>
+        <form action="/listings/<%= listing._id %>/reviews" method="post">
+            <div class="mb-3 mt-3">
+                <label for="rating" class="form-label">Rating</label>
+                <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="rating" class="form-label">Comments</label>
+                <textarea rows="5" cols="30" id="comment" name="review[comment]" class="form-control"></textarea>
+            </div>
+            <button class="btn btn-outline-dark">Submit</button>
         </form>
     </div>
 </body>
