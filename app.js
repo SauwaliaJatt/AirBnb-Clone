@@ -7,8 +7,9 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema } = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
+const review = require("./models/review.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -32,9 +33,21 @@ async function main() {
     await mongoose.connect(MONGO_URL);
 }
 
-
+//validation Unigg Joi:
+//validate Listings
 const validateListing = (req, res, next) => {
     let result = listingSchema.validate(req.body);
+    if(result.error){
+        let errMsg = result.error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400, result.error);
+    }else{
+        next();
+    }
+};
+
+//validate Reviews
+const validateReview = (req, res, next) => {
+    let result = review.validate(req.body);
     if(result.error){
         let errMsg = result.error.details.map((el) => el.message).join(",");
         throw new ExpressError(400, result.error);
@@ -96,7 +109,7 @@ app.get("/listings/:id", wrapAsync(async (req, res) => {
 
 
 //Add Review
-app.post("/listings/:id/reviews", wrapAsync(async (req, res) => {
+app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     let newReview = new Review(req.body.reviews);
 
