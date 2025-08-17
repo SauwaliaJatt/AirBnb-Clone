@@ -30,6 +30,7 @@ router.get("/new", (req, res) => {
     res.render("listings/new");
 });
 
+
 router.post("/", validateListing, wrapAsync (async (req, res, next) => {
     // const {title, description, price, location, country} = req.body;
     //it get simper due to listing[title]..... in form as it directly become object like and we can directly access it without above method and easy to use
@@ -40,10 +41,27 @@ router.post("/", validateListing, wrapAsync (async (req, res, next) => {
 }));
 
 
+//show route
+router.get("/:id", wrapAsync(async (req, res) => {
+    let {id} = req.params;
+    const listing = await Listing.findById(id).populate("reviews");
+    if(!listing){
+        req.flash("error", "Listing does not exist!");
+        return res.redirect("/listings");
+    }
+    res.render("listings/show", {listing});
+}));
+
+
 //Edit and Update route
 router.get("/:id/edit", wrapAsync(async (req, res) => {
     const {id} = req.params;
     const listing = await Listing.findById(id);
+
+    if(!listing){
+        req.flash("error", "Listing does not exist!");
+        return res.redirect("/listings");
+    }
     res.render("listings/edit", {listing});
 }));
 
@@ -62,15 +80,6 @@ router.delete("/:id", wrapAsync(async (req, res) => {
     await Listing.findByIdAndDelete(id);
     req.flash("success", "Listing Deleted!");
     res.redirect("/listings");
-}));
-
-
-//show route
-router.get("/:id", wrapAsync(async (req, res) => {
-    let {id} = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
-    if()
-    res.render("listings/show", {listing});
 }));
 
 
