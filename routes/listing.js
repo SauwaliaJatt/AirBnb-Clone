@@ -35,6 +35,7 @@ router.post("/", validateListing, wrapAsync (async (req, res, next) => {
     //it get simper due to listing[title]..... in form as it directly become object like and we can directly access it without above method and easy to use
     const newListing = new Listing(req.body.listing);
     await newListing.save();
+    req.flash("success", "New Listing Created!");
     res.redirect("/listings");
 }));
 
@@ -49,6 +50,8 @@ router.get("/:id/edit", wrapAsync(async (req, res) => {
 router.put("/:id", validateListing, wrapAsync(async (req, res) => {
     const {id} = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing});
+
+    req.flash("success", "Listing Updated!");
     res.redirect(`/listings/${id}`);
 }));
 
@@ -57,6 +60,7 @@ router.put("/:id", validateListing, wrapAsync(async (req, res) => {
 router.delete("/:id", wrapAsync(async (req, res) => {
     const {id} = req.params;
     await Listing.findByIdAndDelete(id);
+    req.flash("success", "Listing Deleted!");
     res.redirect("/listings");
 }));
 
@@ -65,6 +69,7 @@ router.delete("/:id", wrapAsync(async (req, res) => {
 router.get("/:id", wrapAsync(async (req, res) => {
     let {id} = req.params;
     const listing = await Listing.findById(id).populate("reviews");
+    if()
     res.render("listings/show", {listing});
 }));
 
