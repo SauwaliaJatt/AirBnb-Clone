@@ -10,9 +10,8 @@ const listingSchema = new Schema({
     },
     description: String,
     image: {
-        type: String,
-        default: "https://cdn.pixabay.com/photo/2018/04/10/23/46/architecture-3309203_1280.jpg",
-        set: (v) => v === "" ? "https://cdn.pixabay.com/photo/2018/04/10/23/46/architecture-3309203_1280.jpg" : v
+        url: String,
+        filename: String,
     },
     price: Number,
     location: String,
